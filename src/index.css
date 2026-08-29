@@ -1,3 +1,28 @@
+:root {
+  --color-primary: #2f6f6d;
+  --color-primary-dark: #245654;
+  --color-primary-light: #e8f3f2;
+
+  --color-accent: #d99a5b;
+
+  --color-text: #243333;
+  --color-text-secondary: #667575;
+
+  --color-background: #ffffff;
+  --color-background-light: #f5f8f7;
+
+  --color-border: #dde7e5;
+
+  --container-width: 1200px;
+
+  --radius-small: 8px;
+  --radius-medium: 14px;
+  --radius-large: 24px;
+
+  --shadow-small: 0 4px 12px rgba(0, 0, 0, 0.05);
+  --shadow-medium: 0 10px 30px rgba(0, 0, 0, 0.08);
+}
+
 * {
   margin: 0;
   padding: 0;
@@ -8,17 +33,24 @@ html {
   scroll-behavior: smooth;
 }
 
+html,
+body,
+#root {
+  min-height: 100%;
+}
+
 body {
-  font-family: Ariel, sans-serif;
-  background: #ffffff;
-  color: #1f2937;
+  font-family: Arial, sans-serif;
+  background-color: var(--color-background);
+  color: var(--color-text);
+  line-height: 1.6;
 }
 
 button,
 input,
 textarea,
 select {
-  font: inherent;
+  font: inherit;
 }
 
 button {
@@ -28,4 +60,9 @@ button {
 a {
   text-decoration: none;
   color: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
 }
