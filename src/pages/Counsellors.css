@@ -1,0 +1,54 @@
+.counsellors-page {
+  min-height: 100vh;
+}
+
+/* =========================
+   DIRECTORY HEADER
+========================= */
+
+.counsellors-header {
+  padding: 90px 24px;
+
+  background-color: var(--color-background-light);
+
+  text-align: center;
+}
+
+.counsellors-header .section-container {
+  max-width: 800px;
+}
+
+.counsellors-header h1 {
+  margin-bottom: 20px;
+
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  line-height: 1.1;
+  letter-spacing: -0.04em;
+}
+
+.counsellors-header p {
+  max-width: 650px;
+  margin: 0 auto;
+
+  color: var(--color-text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.7;
+}
+
+/* =========================
+   DIRECTORY
+========================= */
+
+.counsellors-directory {
+  padding: 80px 24px;
+}
+
+@media (max-width: 800px) {
+  .counsellors-header {
+    padding: 65px 20px;
+  }
+
+  .counsellors-directory {
+    padding: 60px 20px;
+  }
+}

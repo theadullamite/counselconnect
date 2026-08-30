@@ -2,10 +2,13 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import About from "./pages/About";
 import Counsellors from "./pages/Counsellors";
+import Booking from "./pages/Booking";
 import NotFound from "./pages/NotFound";
-
+import CounsellorProfile from "./pages/CounsellorProfile";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
+import BookingConfirmation from "./pages/BookingConfirmation";
+
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/about" element={<About />} />
         <Route path="/counsellors" element={<Counsellors />} />
+        <Route path="/counsellors/:id" element={<CounsellorProfile />} />
+        <Route path="/counsellors/:id/book" element={<Booking />} />
+        <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
 

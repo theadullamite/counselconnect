@@ -1,33 +1,8 @@
 import { Link } from "react-router-dom";
 import "./Home.css";
 import CounsellorCard from "../components/CounsellorCard";
+import counsellors from "../data/counsellors";
 
-const featuredCounsellors = [
-  {
-    id: 1,
-    name: "Sarah Olaniyi",
-    specialty: "Relationship Counselling",
-    description:
-      "Helping individuals and couples build relationships and communicate more effectively.",
-    experience: 8,
-  },
-  {
-    id: 2,
-    name: "Micah Adeola",
-    specialty: "Career Counselling",
-    description:
-      "Supporting individuals as they navigate career decisions, transitions, and professional growth.",
-    experience: 6,
-  },
-  {
-    id: 3,
-    name: "Endurance Etim",
-    specialty: "Personal Development",
-    description:
-      "Helping clients develop self-awareness, confidence, and practical strategies for personal growth.",
-    experience: 10,
-  },
-];
 
 function Home() {
   return (
@@ -134,7 +109,7 @@ function Home() {
           </div>
 
           <div className="counsellors-grid">
-            {featuredCounsellors.map((counsellor) => (
+            {counsellors.slice(0, 3).map((counsellor) => (
               <CounsellorCard key={counsellor.id} counsellor={counsellor} />
             ))}
           </div>
