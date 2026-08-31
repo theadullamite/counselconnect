@@ -10,7 +10,9 @@ import Footer from "./components/Footer";
 import BookingConfirmation from "./pages/BookingConfirmation";
 
 
+
 function App() {
+  
   return (
     <BrowserRouter>
     <Navbar />
