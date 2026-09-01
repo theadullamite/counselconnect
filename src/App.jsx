@@ -8,8 +8,7 @@ import CounsellorProfile from "./pages/CounsellorProfile";
 import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BookingConfirmation from "./pages/BookingConfirmation";
-
-
+import Register from "./pages/Register";
 
 function App() {
   
@@ -25,6 +24,7 @@ function App() {
         <Route path="/counsellors/:id/book" element={<Booking />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="*" element={<NotFound />} />
+        <Route path="/register" element={<Register />} />
       </Routes>
 
       <Footer />
