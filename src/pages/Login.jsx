@@ -1,19 +1,16 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { signUp } from "../lib/auth";
+import { signIn } from "../lib/auth";
 import "./Auth.css";
 
-function Register() {
+function Login() {
   const [formData, setFormData] = useState({
-    fullName: "",
     email: "",
     password: "",
-    role: "client",
   });
 
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
-  const [message, setMessage] = useState("");
 
   function handleChange(event) {
     const { name, value } = event.target;
@@ -28,14 +25,11 @@ function Register() {
     event.preventDefault();
 
     setError("");
-    setMessage("");
     setLoading(true);
 
-    const { data, error } = await signUp(
+    const { error } = await signIn(
       formData.email,
-      formData.password,
-      formData.fullName,
-      formData.role
+      formData.password
     );
 
     if (error) {
@@ -44,28 +38,25 @@ function Register() {
       return;
     }
 
-    if (data.user) {
-      setMessage(
-        "Account created. Please check your email to confirm your account."
-      );
-    }
+    console.log("Login successful");
 
     setLoading(false);
   }
 
   return (
     <main className="auth-page">
+
       <div className="auth-card">
 
         <span className="section-eyebrow">
-          Join CounselConnect
+          Welcome back
         </span>
 
-        <h1>Create your account</h1>
+        <h1>Log in to CounselConnect</h1>
 
         <p className="auth-description">
-          Create an account to connect with counsellors
-          and manage your sessions.
+          Sign in to manage your counselling sessions
+          and appointments.
         </p>
 
         {error && (
@@ -74,29 +65,7 @@ function Register() {
           </div>
         )}
 
-        {message && (
-          <div className="auth-success">
-            {message}
-          </div>
-        )}
-
         <form onSubmit={handleSubmit}>
-
-          <div className="form-group">
-            <label htmlFor="fullName">
-              Full name
-            </label>
-
-            <input
-              id="fullName"
-              name="fullName"
-              type="text"
-              value={formData.fullName}
-              onChange={handleChange}
-              placeholder="Enter your full name"
-              required
-            />
-          </div>
 
           <div className="form-group">
             <label htmlFor="email">
@@ -125,31 +94,9 @@ function Register() {
               type="password"
               value={formData.password}
               onChange={handleChange}
-              placeholder="Create a password"
-              minLength={6}
+              placeholder="Enter your password"
               required
             />
-          </div>
-
-          <div className="form-group">
-            <label htmlFor="role">
-              I am registering as
-            </label>
-
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-            >
-              <option value="client">
-                Client
-              </option>
-
-              <option value="counsellor">
-                Counsellor
-              </option>
-            </select>
           </div>
 
           <button
@@ -157,23 +104,22 @@ function Register() {
             className="auth-submit"
             disabled={loading}
           >
-            {loading
-              ? "Creating account..."
-              : "Create account"}
+            {loading ? "Logging in..." : "Log in"}
           </button>
 
         </form>
 
         <p className="auth-footer">
-          Already have an account?{" "}
-          <Link to="/login">
-            Log in
+          Don't have an account?{" "}
+          <Link to="/register">
+            Create one
           </Link>
         </p>
 
       </div>
+
     </main>
   );
 }
 
-export default Register;
+export default Login;

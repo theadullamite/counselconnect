@@ -9,6 +9,7 @@ import Navbar from "./components/Navbar";
 import Footer from "./components/Footer";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import Register from "./pages/Register";
+import Login from "./pages/Login";
 
 function App() {
   
@@ -25,6 +26,7 @@ function App() {
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
         <Route path="*" element={<NotFound />} />
         <Route path="/register" element={<Register />} />
+        <Route path="/login" element={<Login />} />
       </Routes>
 
       <Footer />
