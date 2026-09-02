@@ -10,6 +10,10 @@ import Footer from "./components/Footer";
 import BookingConfirmation from "./pages/BookingConfirmation";
 import Register from "./pages/Register";
 import Login from "./pages/Login";
+import ClientDashboard from "./pages/ClientDashboard";
+import CounsellorDashboard from "./pages/CounsellorDashboard";
+import RoleRoute from "./components/RoleRoute";
+
 
 function App() {
   
@@ -27,6 +31,8 @@ function App() {
         <Route path="*" element={<NotFound />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
+        <Route path="/client-dashboard" element={<RoleRoute allowedRole="client"><ClientDashboard /></RoleRoute>} />
+        <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
       </Routes>
 
       <Footer />
