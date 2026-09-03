@@ -1,6 +1,7 @@
 const counsellors = [
   {
     id: 1,
+    profileId: "4eca2043-2dc6-4b41-9fdf-be4d31a009a3",
     name: "Sarah Olaniyi",
     specialty: "Relationship Counselling",
     description:

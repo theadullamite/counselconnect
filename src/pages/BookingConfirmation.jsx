@@ -1,10 +1,18 @@
-import { Link, useLocation } from "react-router-dom";
+import { useState } from "react";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { supabase } from "../lib/supabase";
 import "./BookingConfirmation.css";
 
 function BookingConfirmation() {
   const location = useLocation();
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   const booking = location.state;
+
+  const [saving, setSaving] = useState(false);
+  const [error, setError] = useState("");
 
   if (!booking) {
     return (
@@ -21,6 +29,48 @@ function BookingConfirmation() {
         </div>
       </main>
     );
+  }
+
+  async function handleConfirmBooking() {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    setSaving(true);
+    setError("");
+
+    // const scheduledDate = new Date(`${booking.date} ${booking.time}`);
+
+    const { data, error } = await supabase
+      .from("appointments")
+      .insert([
+        {
+          client_id: user.id,
+          counsellor_id: booking.profileId,
+          // scheduled_date: scheduledDate.toISOString(),
+          status: "pending",
+        },
+      ])
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error creating appointment:", error);
+      console.error("Error message:", error.message);
+      console.error("Error details:", error.details);
+      console.error("Error hint:", error.hint);
+      console.error("Error code:", error.code);
+      setError(error.message);
+      setSaving(false);
+      return;
+    }
+
+    console.log("Appointment created:", data);
+
+    setSaving(false);
+
+    navigate("/client-dashboard");
   }
 
   return (
@@ -66,6 +116,8 @@ function BookingConfirmation() {
               </div>
             </div>
 
+            {error && <p className="confirmation-error">{error}</p>}
+
             <div className="confirmation-actions">
               <Link
                 to={`/counsellors/${booking.counsellorId}/book`}
@@ -76,11 +128,10 @@ function BookingConfirmation() {
 
               <button
                 className="confirmation-submit"
-                onClick={() => {
-                  console.log("Booking confirmed:", booking);
-                }}
+                onClick={handleConfirmBooking}
+                disabled={saving}
               >
-                Confirm Booking
+                {saving ? "Confirming..." : "Confirm Booking"}
               </button>
             </div>
           </div>

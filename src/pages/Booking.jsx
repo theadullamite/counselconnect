@@ -44,6 +44,7 @@ function Booking() {
     navigate("/booking-confirmation", {
         state: {
             counsellorId: counsellor.id,
+            profileId: counsellor.profileId,
             counsellor: counsellor.name,
             date: selectedDate,
             time: selectedTime,
