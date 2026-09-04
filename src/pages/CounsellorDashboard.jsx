@@ -41,7 +41,12 @@ function CounsellorDashboard() {
 
       const { data, error } = await supabase
         .from("appointments")
-        .select("*")
+        .select(`
+          *,
+          client:profiles!appointments_client_fk (
+          full_name
+          )
+          `)
         .eq("counsellor_id", user.id)
         .order("scheduled_at", { ascending: true });
 
@@ -126,7 +131,7 @@ function CounsellorDashboard() {
               <div className="appointments-list">
                 {appointments.map((appointment) => (
                   <div className="appointment-card" key={appointment.id}>
-                    <h3>Counselling Session</h3>
+                    <h3>Session with {appointment.client?.full_name || "Client"}</h3>
 
                     <p>
                       <strong>Date:</strong>{" "}
