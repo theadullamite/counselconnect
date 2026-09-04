@@ -20,7 +20,7 @@ function ClientDashboard() {
         .from("appointments")
         .select("*")
         .eq("client_id", user.id)
-        // .order("scheduled_date", { ascending: true });
+        .order("scheduled_at", { ascending: true });
 
       if (error) {
         console.error("Error fetching appointments:", error);
@@ -145,7 +145,7 @@ function ClientDashboard() {
                     <p>
                       <strong>Date:</strong>{" "}
                       {new Date(
-                        appointment.scheduled_date
+                        appointment.scheduled_at
                       ).toLocaleString()}
                     </p>
 

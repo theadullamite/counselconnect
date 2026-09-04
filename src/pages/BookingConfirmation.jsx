@@ -40,7 +40,7 @@ function BookingConfirmation() {
     setSaving(true);
     setError("");
 
-    // const scheduledDate = new Date(`${booking.date} ${booking.time}`);
+    const scheduledAt = new Date(`${booking.date} ${booking.time}`);
 
     const { data, error } = await supabase
       .from("appointments")
@@ -48,7 +48,7 @@ function BookingConfirmation() {
         {
           client_id: user.id,
           counsellor_id: booking.profileId,
-          // scheduled_date: scheduledDate.toISOString(),
+          scheduled_at: scheduledAt.toISOString(),
           status: "pending",
         },
       ])
