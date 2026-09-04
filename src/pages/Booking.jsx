@@ -50,6 +50,26 @@ function Booking() {
         return;
       }
 
+      const startOfDay = `${selectedDate}T00:00:00.000Z`;
+      const nextDay = new Date(`${selectedDate}T00:00:00.000Z`);
+      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+
+      const { data: bookedAppointments, error: appointmentsError } =
+        await supabase
+          .from("appointments")
+          .select("scheduled_at")
+          .eq("counsellor_id", counsellor.profileId)
+          .in("status", ["pending", "confirmed"])
+          .gte("scheduled_at", startOfDay)
+          .lt("scheduled_at", nextDay.toISOString());
+
+      if (appointmentsError) {
+        console.error("Error fetching booked appointments:", appointmentsError);
+        setAvailableTimes([]);
+        setLoadingAvailability(false);
+        return;
+      }
+
       const timesWithinAvailability = sessionTimes.filter((time) => {
         const [timePart, period] = time.split(" ");
         let [hours, minutes] = timePart.split(":").map(Number);
@@ -79,9 +99,49 @@ function Booking() {
 
           const endMinutesTotal = endHours * 60 + endMinutes;
 
-          return (
-            slotMinutes >= startMinutesTotal && slotMinutes < endMinutesTotal
+          const withinAvailability = data.some((range) => {
+            const [startHours, startMinutes] = range.start_time
+              .slice(0, 5)
+              .split(":")
+              .map(Number);
+
+            const [endHours, endMinutes] = range.end_time
+              .slice(0, 5)
+              .split(":")
+              .map(Number);
+
+            const startMinutesTotal = startHours * 60 + startMinutes;
+
+            const endMinutesTotal = endHours * 60 + endMinutes;
+
+            return (
+              slotMinutes >= startMinutesTotal && slotMinutes < endMinutesTotal
+            );
+          });
+
+          if (!withinAvailability) {
+            return false;
+          }
+
+          const [year, month, day] = selectedDate.split("-").map(Number);
+
+          const slotDateTime = new Date(
+            year,
+            month - 1,
+            day,
+            hours,
+            minutes,
+            0,
+            0,
           );
+
+          const isBooked = bookedAppointments?.some((appointment) => {
+            const bookedDate = new Date(appointment.scheduled_at);
+
+            return bookedDate.getTime() === slotDateTime.getTime();
+          });
+
+          return !isBooked;
         });
       });
 
