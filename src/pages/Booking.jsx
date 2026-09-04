@@ -1,15 +1,11 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
+import { supabase } from "../lib/supabase";
+
 import counsellors from "../data/counsellors";
 import "./Booking.css";
 
-const availableTimes = [
-  "9:00 AM",
-  "10:30 AM",
-  "12:00 PM",
-  "2:00 PM",
-  "4:00 PM",
-];
+const sessionTimes = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM"];
 
 function Booking() {
   const { id } = useParams();
@@ -19,6 +15,82 @@ function Booking() {
 
   const [selectedDate, setSelectedDate] = useState("");
   const [selectedTime, setSelectedTime] = useState("");
+  const [availableTimes, setAvailableTimes] = useState([]);
+  const [loadingAvailability, setLoadingAvailability] = useState(false);
+
+  useEffect(() => {
+    async function fetchAvailability() {
+      if (!selectedDate || !counsellor) {
+        setAvailableTimes([]);
+        return;
+      }
+
+      setLoadingAvailability(true);
+      setSelectedTime("");
+
+      const date = new Date(`${selectedDate}T00:00:00`);
+      const dayOfWeek = date.getDay();
+
+      const { data, error } = await supabase
+        .from("availability")
+        .select("start_time, end_time")
+        .eq("counsellor_id", counsellor.profileId)
+        .eq("day_of_week", dayOfWeek);
+
+      if (error) {
+        console.error("Error fetching availability:", error);
+        setAvailableTimes([]);
+        setLoadingAvailability(false);
+        return;
+      }
+
+      if (!data || data.length === 0) {
+        setAvailableTimes([]);
+        setLoadingAvailability(false);
+        return;
+      }
+
+      const timesWithinAvailability = sessionTimes.filter((time) => {
+        const [timePart, period] = time.split(" ");
+        let [hours, minutes] = timePart.split(":").map(Number);
+
+        if (period === "PM" && hours !== 12) {
+          hours += 12;
+        }
+
+        if (period === "AM" && hours === 12) {
+          hours = 0;
+        }
+
+        const slotMinutes = hours * 60 + minutes;
+
+        return data.some((range) => {
+          const [startHours, startMinutes] = range.start_time
+            .slice(0, 5)
+            .split(":")
+            .map(Number);
+
+          const [endHours, endMinutes] = range.end_time
+            .slice(0, 5)
+            .split(":")
+            .map(Number);
+
+          const startMinutesTotal = startHours * 60 + startMinutes;
+
+          const endMinutesTotal = endHours * 60 + endMinutes;
+
+          return (
+            slotMinutes >= startMinutesTotal && slotMinutes < endMinutesTotal
+          );
+        });
+      });
+
+      setAvailableTimes(timesWithinAvailability);
+      setLoadingAvailability(false);
+    }
+
+    fetchAvailability();
+  }, [selectedDate, counsellor]);
 
   if (!counsellor) {
     return (
@@ -42,13 +114,13 @@ function Booking() {
     }
 
     navigate("/booking-confirmation", {
-        state: {
-            counsellorId: counsellor.id,
-            profileId: counsellor.profileId,
-            counsellor: counsellor.name,
-            date: selectedDate,
-            time: selectedTime,
-        },
+      state: {
+        counsellorId: counsellor.id,
+        profileId: counsellor.profileId,
+        counsellor: counsellor.name,
+        date: selectedDate,
+        time: selectedTime,
+      },
     });
   }
 
@@ -107,20 +179,32 @@ function Booking() {
               </div>
 
               <div className="time-options">
-                {availableTimes.map((time) => (
-                  <button
-                    key={time}
-                    type="button"
-                    className={
-                      selectedTime === time
-                        ? "time-option selected"
-                        : "time-option"
-                    }
-                    onClick={() => setSelectedTime(time)}
-                  >
-                    {time}
-                  </button>
-                ))}
+                {loadingAvailability && <p>Loading available times...</p>}
+
+                {!loadingAvailability &&
+                  selectedDate &&
+                  availableTimes.length === 0 && (
+                    <p>No available times for this date.</p>
+                  )}
+
+                {!loadingAvailability && availableTimes.length > 0 && (
+                  <div className="time-options">
+                    {availableTimes.map((time) => (
+                      <button
+                        key={time}
+                        type="button"
+                        className={
+                          selectedTime === time
+                            ? "time-option selected"
+                            : "time-option"
+                        }
+                        onClick={() => setSelectedTime(time)}
+                      >
+                        {time}
+                      </button>
+                    ))}
+                  </div>
+                )}
               </div>
             </div>
 
