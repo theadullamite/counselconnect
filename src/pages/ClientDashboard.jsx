@@ -9,6 +9,43 @@ function ClientDashboard() {
   const [loadingAppointments, setLoadingAppointments] = useState(true);
   const [appointmentError, setAppointmentError] = useState("");
 
+  async function cancelAppointment(appointmentId) {
+    const { data, error } = await supabase
+      .from("appointments")
+      .update({
+        status: "cancelled",
+      })
+      .eq("id", appointmentId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error cancelling appointment:", error);
+      setAppointmentError(error.message);
+      return;
+    }
+
+    setAppointments((currentAppointments) =>
+      currentAppointments.map((appointment) =>
+        appointment.id === appointmentId ? data : appointment,
+      ),
+    );
+  }
+
+  const upcomingAppointments = appointments.filter(
+    (appointment) =>
+      (appointment.status === "pending" ||
+        appointment.status === "confirmed") &&
+      new Date(appointment.scheduled_at) > new Date(),
+  );
+
+  const appointmentHistory = appointments.filter(
+    (appointment) =>
+      appointment.status === "completed" ||
+      appointment.status === "cancelled" ||
+      new Date(appointment.scheduled_at) <= new Date(),
+  );
+
   useEffect(() => {
     async function fetchAppointments() {
       if (!user) {
@@ -18,12 +55,14 @@ function ClientDashboard() {
 
       const { data, error } = await supabase
         .from("appointments")
-        .select(`
+        .select(
+          `
           *,
           counsellor:profiles!appointments_counsellor_fk (
           full_name
           )
-          `)
+          `,
+        )
         .eq("client_id", user.id)
         .order("scheduled_at", { ascending: true });
 
@@ -44,128 +83,142 @@ function ClientDashboard() {
   return (
     <main className="dashboard-page">
       <div className="dashboard-container">
-
         <section className="dashboard-header">
-          <span className="section-eyebrow">
-            Client Dashboard
-          </span>
+          <span className="section-eyebrow">Client Dashboard</span>
 
-          <h1>
-            Welcome, {profile?.full_name}
-          </h1>
+          <h1>Welcome, {profile?.full_name}</h1>
 
           <p>
-            Manage your counselling journey, appointments, and
-            connections with counsellors from one place.
+            Manage your counselling journey, appointments, and connections with
+            counsellors from one place.
           </p>
         </section>
 
         <section className="dashboard-cards">
-
           <div className="dashboard-card">
             <h2>Find a Counsellor</h2>
 
             <p>
-              Explore qualified counsellors and find someone
-              who matches your needs.
+              Explore qualified counsellors and find someone who matches your
+              needs.
             </p>
 
-            <a href="/counsellors">
-              Find a Counsellor
-            </a>
+            <a href="/counsellors">Find a Counsellor</a>
           </div>
 
           <div className="dashboard-card">
             <h2>My Appointments</h2>
 
-            <p>
-              View and manage your counselling sessions.
-            </p>
+            <p>View and manage your counselling sessions.</p>
 
-            <strong>
-              {appointments.length}
-            </strong>
+            <strong>{upcomingAppointments.length}</strong>
           </div>
 
           <div className="dashboard-card">
             <h2>My Profile</h2>
 
-            <p>
-              View and manage your CounselConnect profile information.
-            </p>
+            <p>View and manage your CounselConnect profile information.</p>
 
-            <span>
-              Coming soon
-            </span>
+            <span>Coming soon</span>
           </div>
-
         </section>
 
         <section className="dashboard-appointments">
-
+          {/* Upcoming Appointments */}
           <div className="dashboard-section-heading">
-            <h2>My Appointments</h2>
+            <h2>Upcoming Appointments</h2>
           </div>
 
-          {loadingAppointments && (
-            <p>Loading appointments...</p>
-          )}
+          {loadingAppointments && <p>Loading appointments...</p>}
 
           {appointmentError && (
-            <p className="dashboard-error">
-              {appointmentError}
-            </p>
+            <p className="dashboard-error">{appointmentError}</p>
           )}
 
           {!loadingAppointments &&
             !appointmentError &&
-            appointments.length === 0 && (
+            upcomingAppointments.length === 0 && (
               <div className="dashboard-empty-state">
                 <h3>No upcoming appointments</h3>
+                <p>You don't have any upcoming counselling sessions.</p>
 
-                <p>
-                  You haven't booked a counselling session yet.
-                </p>
-
-                <a href="/counsellors">
-                  Find a Counsellor
-                </a>
+                <a href="/counsellors">Find a Counsellor</a>
               </div>
             )}
 
           {!loadingAppointments &&
             !appointmentError &&
-            appointments.length > 0 && (
+            upcomingAppointments.length > 0 && (
               <div className="appointments-list">
-
-                {appointments.map((appointment) => (
-                  <div
-                    className="appointment-card"
-                    key={appointment.id}
-                  >
+                {upcomingAppointments.map((appointment) => (
+                  <div className="appointment-card" key={appointment.id}>
                     <h3>
-                      Session with {appointment.counsellor?.full_name || "Counsellor"}
+                      Session with{" "}
+                      {appointment.counsellor?.full_name || "Counsellor"}
                     </h3>
 
                     <p>
                       <strong>Date:</strong>{" "}
-                      {new Date(
-                        appointment.scheduled_at
-                      ).toLocaleString()}
+                      {new Date(appointment.scheduled_at).toLocaleString()}
                     </p>
 
                     <p>
-                      <strong>Status:</strong>{" "}
-                      {appointment.status}
+                      <strong>Status:</strong> {appointment.status}
                     </p>
+
+                    <div className="appointment-actions">
+                      <button
+                        type="button"
+                        onClick={() => cancelAppointment(appointment.id)}
+                      >
+                        Cancel Appointment
+                      </button>
+                    </div>
                   </div>
                 ))}
-
               </div>
             )}
 
-        </section>
+          {/* Appointment History */}
+          <div className="dashboard-section-heading">
+            <h2>Appointment History</h2>
+          </div>
 
+          {!loadingAppointments &&
+            !appointmentError &&
+            appointmentHistory.length === 0 && (
+              <div className="dashboard-empty-state">
+                <h3>No appointment history</h3>
+                <p>
+                  Your completed and cancelled appointments will appear here.
+                </p>
+              </div>
+            )}
+
+          {!loadingAppointments &&
+            !appointmentError &&
+            appointmentHistory.length > 0 && (
+              <div className="appointments-list">
+                {appointmentHistory.map((appointment) => (
+                  <div className="appointment-card" key={appointment.id}>
+                    <h3>
+                      Session with{" "}
+                      {appointment.counsellor?.full_name || "Counsellor"}
+                    </h3>
+
+                    <p>
+                      <strong>Date:</strong>{" "}
+                      {new Date(appointment.scheduled_at).toLocaleString()}
+                    </p>
+
+                    <p>
+                      <strong>Status:</strong> {appointment.status}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            )}
+        </section>
       </div>
     </main>
   );

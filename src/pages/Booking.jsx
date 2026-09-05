@@ -5,8 +5,6 @@ import { supabase } from "../lib/supabase";
 import counsellors from "../data/counsellors";
 import "./Booking.css";
 
-const sessionTimes = ["9:00 AM", "10:30 AM", "12:00 PM", "2:00 PM", "4:00 PM"];
-
 function Booking() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -50,9 +48,15 @@ function Booking() {
         return;
       }
 
-      const startOfDay = `${selectedDate}T00:00:00.000Z`;
-      const nextDay = new Date(`${selectedDate}T00:00:00.000Z`);
-      nextDay.setUTCDate(nextDay.getUTCDate() + 1);
+      /*
+    Get the beginning and end of the selected day
+    using the user's local timezone.
+  */
+      const [year, month, day] = selectedDate.split("-").map(Number);
+
+      const startOfDayDate = new Date(year, month - 1, day, 0, 0, 0, 0);
+
+      const startOfNextDayDate = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
 
       const { data: bookedAppointments, error: appointmentsError } =
         await supabase
@@ -60,8 +64,8 @@ function Booking() {
           .select("scheduled_at")
           .eq("counsellor_id", counsellor.profileId)
           .in("status", ["pending", "confirmed"])
-          .gte("scheduled_at", startOfDay)
-          .lt("scheduled_at", nextDay.toISOString());
+          .gte("scheduled_at", startOfDayDate.toISOString())
+          .lt("scheduled_at", startOfNextDayDate.toISOString());
 
       if (appointmentsError) {
         console.error("Error fetching booked appointments:", appointmentsError);
@@ -70,60 +74,30 @@ function Booking() {
         return;
       }
 
-      const timesWithinAvailability = sessionTimes.filter((time) => {
-        const [timePart, period] = time.split(" ");
-        let [hours, minutes] = timePart.split(":").map(Number);
+      /*
+    Generate one-hour session slots from the counsellor's
+    actual availability.
+  */
+      const generatedTimes = [];
 
-        if (period === "PM" && hours !== 12) {
-          hours += 12;
-        }
+      data.forEach((range) => {
+        const [startHours, startMinutes] = range.start_time
+          .slice(0, 5)
+          .split(":")
+          .map(Number);
 
-        if (period === "AM" && hours === 12) {
-          hours = 0;
-        }
+        const [endHours, endMinutes] = range.end_time
+          .slice(0, 5)
+          .split(":")
+          .map(Number);
 
-        const slotMinutes = hours * 60 + minutes;
+        let currentMinutes = startHours * 60 + startMinutes;
 
-        return data.some((range) => {
-          const [startHours, startMinutes] = range.start_time
-            .slice(0, 5)
-            .split(":")
-            .map(Number);
+        const endMinutesTotal = endHours * 60 + endMinutes;
 
-          const [endHours, endMinutes] = range.end_time
-            .slice(0, 5)
-            .split(":")
-            .map(Number);
-
-          const startMinutesTotal = startHours * 60 + startMinutes;
-
-          const endMinutesTotal = endHours * 60 + endMinutes;
-
-          const withinAvailability = data.some((range) => {
-            const [startHours, startMinutes] = range.start_time
-              .slice(0, 5)
-              .split(":")
-              .map(Number);
-
-            const [endHours, endMinutes] = range.end_time
-              .slice(0, 5)
-              .split(":")
-              .map(Number);
-
-            const startMinutesTotal = startHours * 60 + startMinutes;
-
-            const endMinutesTotal = endHours * 60 + endMinutes;
-
-            return (
-              slotMinutes >= startMinutesTotal && slotMinutes < endMinutesTotal
-            );
-          });
-
-          if (!withinAvailability) {
-            return false;
-          }
-
-          const [year, month, day] = selectedDate.split("-").map(Number);
+        while (currentMinutes + 60 <= endMinutesTotal) {
+          const hours = Math.floor(currentMinutes / 60);
+          const minutes = currentMinutes % 60;
 
           const slotDateTime = new Date(
             year,
@@ -141,11 +115,20 @@ function Booking() {
             return bookedDate.getTime() === slotDateTime.getTime();
           });
 
-          return !isBooked;
-        });
+          if (!isBooked) {
+            generatedTimes.push(
+              slotDateTime.toLocaleTimeString([], {
+                hour: "numeric",
+                minute: "2-digit",
+              }),
+            );
+          }
+
+          currentMinutes += 60;
+        }
       });
 
-      setAvailableTimes(timesWithinAvailability);
+      setAvailableTimes(generatedTimes);
       setLoadingAvailability(false);
     }
 
