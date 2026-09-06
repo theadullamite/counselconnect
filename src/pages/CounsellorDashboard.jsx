@@ -221,9 +221,9 @@ function CounsellorDashboard() {
           <div className="dashboard-card">
             <h2>My Profile</h2>
 
-            <p>View and manage your CounselConnect profile information.</p>
+            <p>View and manage your professional profile information.</p>
 
-            <span>Coming soon</span>
+            <a href="/counsellor-profile">View My Profile</a>
           </div>
 
           <div className="dashboard-card">
