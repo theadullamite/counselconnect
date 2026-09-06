@@ -13,6 +13,7 @@ import Login from "./pages/Login";
 import ClientDashboard from "./pages/ClientDashboard";
 import CounsellorDashboard from "./pages/CounsellorDashboard";
 import RoleRoute from "./components/RoleRoute";
+import CounsellorProfileManagement from "./pages/CounsellorProfileManagement";
 
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/client-dashboard" element={<RoleRoute allowedRole="client"><ClientDashboard /></RoleRoute>} />
         <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
+        <Route path="/counsellor-profile" element={<RoleRoute allowedRole="counsellor"><CounsellorProfileManagement /></RoleRoute>} />
       </Routes>
 
       <Footer />
