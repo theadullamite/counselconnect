@@ -20,16 +20,14 @@ function CounsellorProfileManagement() {
     setProfileError("");
     setSuccessMessage("");
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("profiles")
       .update({
         specialty: profile.specialty,
         description: profile.description,
-        experience: profile.experience,
+        experience: Number(profile.experience),
       })
-      .eq("id", user.id)
-      .select("full_name, role, specialty, description, experience")
-      .single();
+      .eq("id", user.id);
 
     if (error) {
       console.error("Error updating counsellor profile:", error);
@@ -38,7 +36,11 @@ function CounsellorProfileManagement() {
       return;
     }
 
-    setProfile(data);
+    setProfile((currentProfile) => ({
+      ...currentProfile,
+      experience: Number(currentProfile.experience),
+    }));
+
     setIsEditing(false);
     setSuccessMessage("Profile updated successfully.");
     setSavingProfile(false);
