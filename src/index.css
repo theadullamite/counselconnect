@@ -170,3 +170,43 @@ img {
     padding: 28px 20px;
   }
 }
+
+.profile-management-card {
+  margin-top: 32px;
+  max-width: 600px;
+  padding: 32px;
+  background: white;
+  border-radius: 12px;
+}
+
+.profile-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 24px;
+}
+
+.profile-form-group label {
+  font-weight: 600;
+}
+
+.profile-form-group input {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #d6d6d6;
+  border-radius: 8px;
+  font: inherit;
+}
+
+.profile-management-card button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  font: inherit;
+}
+
+.profile-management-card button:disabled {
+  cursor: not-allowed;
+  opacity: 0.7;
+}
