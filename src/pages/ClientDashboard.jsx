@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { Link } from "react-router-dom";
 
 function ClientDashboard() {
   const { user, profile } = useAuth();
@@ -8,8 +9,20 @@ function ClientDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
   const [appointmentError, setAppointmentError] = useState("");
+  const [cancellingAppointmentId, setCancellingAppointmentId] = useState(null);
 
   async function cancelAppointment(appointmentId) {
+    const confirmed = window.confirm(
+      "Are you sure you want to cancel this appointment?",
+    );
+
+    if (!confirmed) {
+      return;
+    }
+
+    setCancellingAppointmentId(appointmentId);
+    setAppointmentError("");
+
     const { data, error } = await supabase
       .from("appointments")
       .update({
@@ -22,6 +35,7 @@ function ClientDashboard() {
     if (error) {
       console.error("Error cancelling appointment:", error);
       setAppointmentError(error.message);
+      setCancellingAppointmentId(null);
       return;
     }
 
@@ -30,6 +44,8 @@ function ClientDashboard() {
         appointment.id === appointmentId ? data : appointment,
       ),
     );
+
+    setCancellingAppointmentId(null);
   }
 
   const upcomingAppointments = appointments.filter(
@@ -119,7 +135,7 @@ function ClientDashboard() {
 
             <p>View and manage your CounselConnect profile information.</p>
 
-            <span>Coming soon</span>
+            <Link to="/client-profile">Manage Profile</Link>
           </div>
         </section>
 
@@ -170,8 +186,11 @@ function ClientDashboard() {
                       <button
                         type="button"
                         onClick={() => cancelAppointment(appointment.id)}
+                        disabled={cancellingAppointmentId === appointment.id}
                       >
-                        Cancel Appointment
+                        {cancellingAppointmentId === appointment.id
+                          ? "Cancelling..."
+                          : "Cancel Appointment"}
                       </button>
                     </div>
                   </div>

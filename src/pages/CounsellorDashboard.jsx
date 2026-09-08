@@ -8,16 +8,18 @@ function CounsellorDashboard() {
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
   const [appointmentError, setAppointmentError] = useState("");
+  const [updatingAppointmentId, setUpdatingAppointmentId] = useState(null);
   const [availability, setAvailability] = useState([]);
   const [loadingAvailability, setLoadingAvailability] = useState(true);
   const [availabilityError, setAvailabilityError] = useState("");
 
   async function updateAppointmentStatus(appointmentId, newStatus) {
+    setUpdatingAppointmentId(appointmentId);
+    setAppointmentError("");
+
     const { data, error } = await supabase
       .from("appointments")
-      .update({
-        status: newStatus,
-      })
+      .update({ status: newStatus })
       .eq("id", appointmentId)
       .select()
       .single();
@@ -25,6 +27,7 @@ function CounsellorDashboard() {
     if (error) {
       console.error("Error updating appointment:", error);
       setAppointmentError(error.message);
+      setUpdatingAppointmentId(null);
       return;
     }
 
@@ -33,6 +36,8 @@ function CounsellorDashboard() {
         appointment.id === appointmentId ? data : appointment,
       ),
     );
+
+    setUpdatingAppointmentId(null);
   }
 
   const upcomingAppointments = appointments.filter(
@@ -377,8 +382,11 @@ function CounsellorDashboard() {
                           onClick={() =>
                             updateAppointmentStatus(appointment.id, "confirmed")
                           }
+                          disabled={updatingAppointmentId === appointment.id}
                         >
-                          Confirm
+                          {updatingAppointmentId === appointment.id
+                            ? "Updating..."
+                            : "Confirm"}
                         </button>
 
                         <button
@@ -386,8 +394,11 @@ function CounsellorDashboard() {
                           onClick={() =>
                             updateAppointmentStatus(appointment.id, "cancelled")
                           }
+                          disabled={updatingAppointmentId === appointment.id}
                         >
-                          Cancel
+                          {updatingAppointmentId === appointment.id
+                            ? "Updating..."
+                            : "Cancel"}
                         </button>
                       </div>
                     )}
@@ -399,8 +410,11 @@ function CounsellorDashboard() {
                           onClick={() =>
                             updateAppointmentStatus(appointment.id, "completed")
                           }
+                          disabled={updatingAppointmentId === appointment.id}
                         >
-                          Mark as Completed
+                          {updatingAppointmentId === appointment.id
+                            ? "Updating..."
+                            : "Mark as Completed"}
                         </button>
                       </div>
                     )}
