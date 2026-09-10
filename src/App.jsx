@@ -15,6 +15,7 @@ import ClientProfile from "./pages/ClientProfile";
 import CounsellorDashboard from "./pages/CounsellorDashboard";
 import RoleRoute from "./components/RoleRoute";
 import CounsellorProfileManagement from "./pages/CounsellorProfileManagement";
+import Chat from "./pages/Chat";
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/client-profile" element={<RoleRoute allowedRole="client"><ClientProfile /></RoleRoute>} />
         <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
         <Route path="/counsellor-profile" element={<RoleRoute allowedRole="counsellor"><CounsellorProfileManagement /></RoleRoute>} />
+        <Route  path="/chat/:conversationId" element={<RoleRoute><Chat /></RoleRoute>} />
       </Routes>
 
       <Footer />
