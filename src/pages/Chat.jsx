@@ -10,6 +10,8 @@ function Chat() {
   const [messages, setMessages] = useState([]);
   const [loadingMessages, setLoadingMessages] = useState(true);
   const [errorMessage, setErrorMessage] = useState("");
+  const [newMessage, setNewMessage] = useState("");
+  const [sendingMessage, setSendingMessage] = useState(false);
 
   useEffect(() => {
     async function loadMessages() {
@@ -38,6 +40,40 @@ function Chat() {
     loadMessages();
   }, [user, conversationId]);
 
+  async function sendMessage(event) {
+    event.preventDefault();
+
+    const trimmedMessage = newMessage.trim();
+
+    if (!trimmedMessage || !user || !conversationId) {
+      return;
+    }
+
+    setSendingMessage(true);
+    setErrorMessage("");
+
+    const { data, error } = await supabase
+      .from("messages")
+      .insert({
+        conversation_id: conversationId,
+        sender_id: user.id,
+        content: trimmedMessage,
+      })
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error sending message:", error);
+      setErrorMessage(error.message);
+      setSendingMessage(false);
+      return;
+    }
+
+    setMessages((currentMessages) => [...currentMessages, data]);
+    setNewMessage("");
+    setSendingMessage(false);
+  }
+
   return (
     <main className="dashboard-page">
       <div className="dashboard-container">
@@ -52,31 +88,40 @@ function Chat() {
         <section className="chat-container">
           {loadingMessages && <p>Loading messages...</p>}
 
-          {errorMessage && (
-            <p className="dashboard-error">{errorMessage}</p>
+          {errorMessage && <p className="dashboard-error">{errorMessage}</p>}
+
+          {!loadingMessages && !errorMessage && messages.length === 0 && (
+            <p>No messages yet.</p>
           )}
 
-          {!loadingMessages &&
-            !errorMessage &&
-            messages.length === 0 && (
-              <p>No messages yet.</p>
-            )}
+          {!loadingMessages && !errorMessage && messages.length > 0 && (
+            <div className="chat-messages">
+              {messages.map((message) => (
+                <div className="chat-message" key={message.id}>
+                  <p>{message.content}</p>
 
-          {!loadingMessages &&
-            !errorMessage &&
-            messages.length > 0 && (
-              <div className="chat-messages">
-                {messages.map((message) => (
-                  <div className="chat-message" key={message.id}>
-                    <p>{message.content}</p>
+                  <small>{new Date(message.created_at).toLocaleString()}</small>
+                </div>
+              ))}
+            </div>
+          )}
 
-                    <small>
-                      {new Date(message.created_at).toLocaleString()}
-                    </small>
-                  </div>
-                ))}
-              </div>
-            )}
+          <form className="chat-form" onSubmit={sendMessage}>
+            <input
+              type="text"
+              value={newMessage}
+              onChange={(event) => setNewMessage(event.target.value)}
+              placeholder="Type a message..."
+              disabled={sendingMessage}
+            />
+
+            <button
+              type="submit"
+              disabled={sendingMessage || !newMessage.trim()}
+            >
+              {sendingMessage ? "Sending..." : "Send"}
+            </button>
+          </form>
         </section>
       </div>
     </main>

@@ -39,7 +39,7 @@ function App() {
         <Route path="/client-profile" element={<RoleRoute allowedRole="client"><ClientProfile /></RoleRoute>} />
         <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
         <Route path="/counsellor-profile" element={<RoleRoute allowedRole="counsellor"><CounsellorProfileManagement /></RoleRoute>} />
-        <Route  path="/chat/:conversationId" element={<RoleRoute><Chat /></RoleRoute>} />
+        <Route  path="/chat/:conversationId" element={<RoleRoute allowedRole="client"><Chat /></RoleRoute>} />
       </Routes>
 
       <Footer />
