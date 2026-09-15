@@ -59,13 +59,11 @@ function Booking() {
       const startOfNextDayDate = new Date(year, month - 1, day + 1, 0, 0, 0, 0);
 
       const { data: bookedAppointments, error: appointmentsError } =
-        await supabase
-          .from("appointments")
-          .select("scheduled_at")
-          .eq("counsellor_id", counsellor.profileId)
-          .in("status", ["pending", "confirmed"])
-          .gte("scheduled_at", startOfDayDate.toISOString())
-          .lt("scheduled_at", startOfNextDayDate.toISOString());
+        await supabase.rpc("get_booked_slots", {
+          p_counsellor_id: counsellor.profileId,
+          p_start: startOfDayDate.toISOString(),
+          p_end: startOfNextDayDate.toISOString(),
+        });
 
       if (appointmentsError) {
         console.error("Error fetching booked appointments:", appointmentsError);
