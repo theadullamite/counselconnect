@@ -16,7 +16,11 @@ function RoleRoute({ children, allowedRole }) {
     return <p>Loading profile...</p>;
   }
 
-  if (profile.role !== allowedRole) {
+  if (
+    Array.isArray(allowedRole)
+    ? !allowedRole.includes(profile.role)
+    : profile.role !== allowedRole
+  ) {
     if (profile.role === "client") {
       return <Navigate to="/client-dashboard" replace />;
     }
