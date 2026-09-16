@@ -27,10 +27,7 @@ function Login() {
     setError("");
     setLoading(true);
 
-    const { error } = await signIn(
-      formData.email,
-      formData.password
-    );
+    const { error } = await signIn(formData.email, formData.password);
 
     if (error) {
       setError(error.message);
@@ -38,40 +35,25 @@ function Login() {
       return;
     }
 
-    console.log("Login successful");
-
     setLoading(false);
   }
 
-
   return (
     <main className="auth-page">
-
       <div className="auth-card">
-
-        <span className="section-eyebrow">
-          Welcome back
-        </span>
+        <span className="section-eyebrow">Welcome back</span>
 
         <h1>Log in to CounselConnect</h1>
 
         <p className="auth-description">
-          Sign in to manage your counselling sessions
-          and appointments.
+          Sign in to manage your counselling sessions and appointments.
         </p>
 
-        {error && (
-          <div className="auth-error">
-            {error}
-          </div>
-        )}
+        {error && <div className="auth-error">{error}</div>}
 
         <form onSubmit={handleSubmit}>
-
           <div className="form-group">
-            <label htmlFor="email">
-              Email address
-            </label>
+            <label htmlFor="email">Email address</label>
 
             <input
               id="email"
@@ -85,9 +67,7 @@ function Login() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="password">
-              Password
-            </label>
+            <label htmlFor="password">Password</label>
 
             <input
               id="password"
@@ -100,25 +80,15 @@ function Login() {
             />
           </div>
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={loading}
-          >
+          <button type="submit" className="auth-submit" disabled={loading}>
             {loading ? "Logging in..." : "Log in"}
           </button>
-
         </form>
 
         <p className="auth-footer">
-          Don't have an account?{" "}
-          <Link to="/register">
-            Create one
-          </Link>
+          Don't have an account? <Link to="/register">Create one</Link>
         </p>
-
       </div>
-
     </main>
   );
 }

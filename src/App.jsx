@@ -32,7 +32,6 @@ function App() {
         <Route path="/counsellors/:id" element={<CounsellorProfile />} />
         <Route path="/counsellors/:id/book" element={<Booking />} />
         <Route path="/booking-confirmation" element={<BookingConfirmation />} />
-        <Route path="*" element={<NotFound />} />
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/client-dashboard" element={<RoleRoute allowedRole="client"><ClientDashboard /></RoleRoute>} />
@@ -40,6 +39,7 @@ function App() {
         <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
         <Route path="/counsellor-profile" element={<RoleRoute allowedRole="counsellor"><CounsellorProfileManagement /></RoleRoute>} />
         <Route  path="/chat/:conversationId" element={<RoleRoute allowedRole={["client", "counsellor"]}><Chat /></RoleRoute>} />
+        <Route path="*" element={<NotFound />} />
       </Routes>
 
       <Footer />

@@ -66,7 +66,7 @@ function BookingConfirmation() {
       return;
     }
 
-    console.log("Appointment created:", data);
+    
 
     setSaving(false);
 
