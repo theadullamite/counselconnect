@@ -24,8 +24,8 @@ function Register() {
     }));
   }
 
-  async function handleSubmit(e) {
-    e.preventDefault();
+  async function handleSubmit(event) {
+    event.preventDefault();
 
     setError("");
     setMessage("");

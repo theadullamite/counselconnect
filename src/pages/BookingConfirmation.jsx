@@ -42,7 +42,7 @@ function BookingConfirmation() {
 
     const scheduledAt = new Date(`${booking.date} ${booking.time}`);
 
-    const { data, error } = await supabase
+    const { error } = await supabase
       .from("appointments")
       .insert([
         {
