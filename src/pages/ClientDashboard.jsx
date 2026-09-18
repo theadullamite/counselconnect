@@ -119,7 +119,7 @@ function ClientDashboard() {
               needs.
             </p>
 
-            <a href="/counsellors">Find a Counsellor</a>
+            <Link to="/counsellors">Find a Counsellor</Link>
           </div>
 
           <div className="dashboard-card">

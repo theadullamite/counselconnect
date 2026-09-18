@@ -237,11 +237,11 @@ function CounsellorDashboard() {
 
             <p>Manage the days and times when clients can book sessions.</p>
 
-            <span>Coming soon</span>
+            <a href="#availability">Manage Availability</a>
           </div>
         </section>
 
-        <section className="dashboard-availability">
+        <section className="dashboard-availability" id="availability">
           <div className="dashboard-section-heading">
             <h2>My Availability</h2>
             <p>
