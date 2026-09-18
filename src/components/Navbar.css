@@ -58,13 +58,10 @@
 @media (max-width: 700px) {
   .navbar-container {
     position: relative;
-    .navbar-menu-button {
-    display: block;
-  }
   }
 
   .navbar-menu-button {
-    display: none;
+    display: block;
   }
 
   .navbar-links {
