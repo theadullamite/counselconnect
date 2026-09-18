@@ -158,7 +158,7 @@ function ClientDashboard() {
                 <h3>No upcoming appointments</h3>
                 <p>You don't have any upcoming counselling sessions.</p>
 
-                <a href="/counsellors">Find a Counsellor</a>
+                <Link to="/counsellors">Find a Counsellor</Link>
               </div>
             )}
 

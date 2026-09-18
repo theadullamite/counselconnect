@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
+import { Link } from "react-router-dom";
 
 function CounsellorDashboard() {
   const { user, profile } = useAuth();
@@ -228,7 +229,7 @@ function CounsellorDashboard() {
 
             <p>View and manage your professional profile information.</p>
 
-            <a href="/counsellor-profile">View My Profile</a>
+            <Link to="/counsellor-profile">View My Profile</Link>
           </div>
 
           <div className="dashboard-card">
