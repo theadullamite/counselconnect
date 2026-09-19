@@ -1,15 +1,44 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function ClientDashboard() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
   const [appointmentError, setAppointmentError] = useState("");
   const [cancellingAppointmentId, setCancellingAppointmentId] = useState(null);
+
+  async function openChat(counsellorId) {
+    if (!user || !counsellorId) {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("conversations")
+      .upsert(
+        {
+          client_id: user.id,
+          counsellor_id: counsellorId,
+        },
+        {
+          onConflict: "client_id,counsellor_id",
+        },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error opening conversation:", error);
+      setAppointmentError(error.message);
+      return;
+    }
+
+    navigate(`/chat/${data.id}`);
+  }
 
   async function cancelAppointment(appointmentId) {
     const confirmed = window.confirm(
@@ -183,6 +212,13 @@ function ClientDashboard() {
                     </p>
 
                     <div className="appointment-actions">
+                      <button
+                        type="button"
+                        onClick={() => openChat(appointment.counsellor_id)}
+                      >
+                        Chat with Counsellor
+                      </button>
+
                       <button
                         type="button"
                         onClick={() => cancelAppointment(appointment.id)}

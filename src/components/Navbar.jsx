@@ -37,13 +37,28 @@ function Navbar() {
             About
           </Link>
 
-          <Link to="/login" onClick={closeMenu}>
-            Log In
-          </Link>
+          {user ? (
+            <button
+              type="button"
+              className="navbar-logout"
+              onClick={async () => {
+                await signOut();
+                closeMenu();
+              }}
+            >
+              Log Out
+            </button>
+          ) : (
+            <>
+              <Link to="/login" onClick={closeMenu}>
+                Log In
+              </Link>
 
-          <Link to="/register" className="navbar-cta" onClick={closeMenu}>
-            Get Started
-          </Link>
+              <Link to="/register" className="navbar-cta" onClick={closeMenu}>
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </nav>

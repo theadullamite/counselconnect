@@ -9,6 +9,9 @@ function Login() {
   const { profile } = useAuth();
 
   useEffect(() => {
+
+    if (!profile) return;
+    
     if (profile.role === "client") {
       navigate("/client-dashboard");
     }
