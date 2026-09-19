@@ -1,8 +1,11 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import "./Navbar.css";
+import { useAuth } from "../context/AuthContext";
+import { signOut } from "../lib/auth";
 
 function Navbar() {
+  const { user } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {

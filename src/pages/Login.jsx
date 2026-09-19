@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { signIn } from "../lib/auth";
 import { useAuth } from "../context/AuthContext";
@@ -7,6 +7,16 @@ import "./Auth.css";
 function Login() {
   const navigate = useNavigate();
   const { profile } = useAuth();
+
+  useEffect(() => {
+    if (profile.role === "client") {
+      navigate("/client-dashboard");
+    }
+
+    if (profile.role === "counsellor") {
+      navigate("/counsellor-dashboard");
+    }
+  }, [profile, navigate]);
 
 
   const [formData, setFormData] = useState({
