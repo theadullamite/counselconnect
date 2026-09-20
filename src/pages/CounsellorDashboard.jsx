@@ -413,7 +413,7 @@ function CounsellorDashboard() {
                         >
                           Chat with Client
                         </button>
-                        
+
                         <button
                           type="button"
                           onClick={() =>
@@ -442,6 +442,12 @@ function CounsellorDashboard() {
 
                     {appointment.status === "confirmed" && (
                       <div className="appointment-actions">
+                        <button
+                          type="button"
+                          onClick={() => openChat(appointment.client_id)}
+                        >
+                          Chat with Client
+                        </button>
                         <button
                           type="button"
                           onClick={() =>
