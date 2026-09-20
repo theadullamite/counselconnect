@@ -448,6 +448,7 @@ function CounsellorDashboard() {
                         >
                           Chat with Client
                         </button>
+                        
                         <button
                           type="button"
                           onClick={() =>

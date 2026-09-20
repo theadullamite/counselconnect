@@ -12,6 +12,41 @@ function Chat() {
   const [errorMessage, setErrorMessage] = useState("");
   const [newMessage, setNewMessage] = useState("");
   const [sendingMessage, setSendingMessage] = useState(false);
+  const [conversation, setConversation] = useState(null);
+
+  useEffect(() => {
+    async function loadConversation() {
+      if (!user || !conversationId) {
+        return;
+      }
+
+      const { data, error } = await supabase
+        .from("conversations")
+        .select(
+          `
+          *,
+          client:profiles!conversations_client_id_fkey (
+            full_name
+          ),
+          counsellor:profiles!conversations_counsellor_id_fkey (
+            full_name
+          )
+          `,
+        )
+        .eq("id", conversationId)
+        .single();
+
+      if (error) {
+        console.error("Error loading conversation:", error);
+        setErrorMessage(error.message);
+        return;
+      }
+
+      setConversation(data);
+    }
+
+    loadConversation();
+  }, [user, conversationId]);
 
   useEffect(() => {
     async function loadMessages() {
@@ -74,37 +109,61 @@ function Chat() {
     setSendingMessage(false);
   }
 
+  const otherPersonName =
+    user?.id === conversation?.client_id
+      ? conversation?.counsellor?.full_name
+      : conversation?.client?.full_name;
+
+  const otherPersonRole =
+    user?.id === conversation?.client_id ? "Counsellor" : "Client";
+
   return (
     <main className="dashboard-page">
       <div className="dashboard-container">
         <section className="dashboard-header">
           <span className="section-eyebrow">Messages</span>
 
-          <h1>Chat</h1>
+          <h1>
+            {otherPersonName
+              ? `Chat with ${otherPersonName}`
+              : "Chat"}
+          </h1>
 
-          <p>Communicate securely with your counsellor.</p>
+          <p>
+            {otherPersonName
+              ? `${otherPersonRole} · Communicate securely through CounselConnect.`
+              : "Communicate securely through CounselConnect."}
+          </p>
         </section>
 
         <section className="chat-container">
           {loadingMessages && <p>Loading messages...</p>}
 
-          {errorMessage && <p className="dashboard-error">{errorMessage}</p>}
-
-          {!loadingMessages && !errorMessage && messages.length === 0 && (
-            <p>No messages yet.</p>
+          {errorMessage && (
+            <p className="dashboard-error">{errorMessage}</p>
           )}
 
-          {!loadingMessages && !errorMessage && messages.length > 0 && (
-            <div className="chat-messages">
-              {messages.map((message) => (
-                <div className="chat-message" key={message.id}>
-                  <p>{message.content}</p>
+          {!loadingMessages &&
+            !errorMessage &&
+            messages.length === 0 && (
+              <p>No messages yet.</p>
+            )}
 
-                  <small>{new Date(message.created_at).toLocaleString()}</small>
-                </div>
-              ))}
-            </div>
-          )}
+          {!loadingMessages &&
+            !errorMessage &&
+            messages.length > 0 && (
+              <div className="chat-messages">
+                {messages.map((message) => (
+                  <div className="chat-message" key={message.id}>
+                    <p>{message.content}</p>
+
+                    <small>
+                      {new Date(message.created_at).toLocaleString()}
+                    </small>
+                  </div>
+                ))}
+              </div>
+            )}
 
           <form className="chat-form" onSubmit={sendMessage}>
             <input
