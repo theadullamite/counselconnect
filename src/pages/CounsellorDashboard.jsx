@@ -1,10 +1,11 @@
 import { useEffect, useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function CounsellorDashboard() {
   const { user, profile } = useAuth();
+  const navigate = useNavigate();
 
   const [appointments, setAppointments] = useState([]);
   const [loadingAppointments, setLoadingAppointments] = useState(true);
@@ -13,6 +14,34 @@ function CounsellorDashboard() {
   const [availability, setAvailability] = useState([]);
   const [loadingAvailability, setLoadingAvailability] = useState(true);
   const [availabilityError, setAvailabilityError] = useState("");
+
+  async function openChat(clientId) {
+    if (!user || !clientId) {
+      return;
+    }
+
+    const { data, error } = await supabase
+      .from("conversations")
+      .upsert(
+        {
+          client_id: clientId,
+          counsellor_id: user.id,
+        },
+        {
+          onConflict: "client_id,counsellor_id",
+        },
+      )
+      .select()
+      .single();
+
+    if (error) {
+      console.error("Error opening conversation:", error);
+      setAppointmentError(error.message);
+      return;
+    }
+
+    navigate(`/chat/${data.id}`);
+  }
 
   async function updateAppointmentStatus(appointmentId, newStatus) {
     setUpdatingAppointmentId(appointmentId);
@@ -378,6 +407,13 @@ function CounsellorDashboard() {
 
                     {appointment.status === "pending" && (
                       <div className="appointment-actions">
+                        <button
+                          type="button"
+                          onClick={() => openChat(appointment.client_id)}
+                        >
+                          Chat with Client
+                        </button>
+                        
                         <button
                           type="button"
                           onClick={() =>
