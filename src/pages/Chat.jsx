@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { supabase } from "../lib/supabase";
 
-function Chat() {
+export default function Chat() {
   const { conversationId } = useParams();
   const { user } = useAuth();
 
@@ -186,5 +186,3 @@ function Chat() {
     </main>
   );
 }
-
-export default Chat;
