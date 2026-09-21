@@ -5,7 +5,7 @@ import { useAuth } from "../context/AuthContext";
 import { signOut } from "../lib/auth";
 
 function Navbar() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
 
   function closeMenu() {
@@ -38,16 +38,28 @@ function Navbar() {
           </Link>
 
           {user ? (
-            <button
-              type="button"
-              className="navbar-logout"
-              onClick={async () => {
-                await signOut();
-                closeMenu();
-              }}
-            >
-              Log Out
-            </button>
+            <>
+              <Link
+                to={
+                  profile?.role === "counsellor"
+                    ? "/counsellor-dashboard"
+                    : "/client-dashboard"
+                }
+                onClick={closeMenu}
+              >
+                Dashboard
+              </Link>
+              <button
+                type="button"
+                className="navbar-logout"
+                onClick={async () => {
+                  await signOut();
+                  closeMenu();
+                }}
+              >
+                Log Out
+              </button>
+            </>
           ) : (
             <>
               <Link to="/login" onClick={closeMenu}>
