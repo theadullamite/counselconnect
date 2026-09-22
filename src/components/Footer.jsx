@@ -31,9 +31,9 @@ function Footer() {
         <div className="footer-column">
           <h3>Support</h3>
 
-          <a href="#">Help Centre</a>
+          <span>Help Centre</span>
 
-          <a href="#">Contact Us</a>
+          <span>Contact Us</span>
         </div>
       </div>
 
@@ -45,3 +45,6 @@ function Footer() {
 }
 
 export default Footer;
+
+
+
