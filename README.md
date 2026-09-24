@@ -6,10 +6,7 @@ CounselConnect is a web platform designed to make it easier for clients to disco
 
  **Live Demo:** https://counselconnect-bice.vercel.app/
 
----
-
 ## What is CounselConnect?
-
 Finding the right counsellor and managing counselling sessions shouldn't have to be complicated.
 
 **CounselConnect** provides a simple digital experience where clients can:
@@ -24,12 +21,8 @@ Finding the right counsellor and managing counselling sessions shouldn't have to
 
 Counsellors can also manage their professional profiles, availability, appointments, and client communication from their dashboard.
 
----
-
-## 🚀 Features
-
-### 👥 Client Experience
-
+## Features
+### Client Experience
 - Client registration and authentication
 - Role-based client dashboard
 - Counsellor directory
@@ -41,8 +34,7 @@ Counsellors can also manage their professional profiles, availability, appointme
 - Client profile management
 - Secure counsellor messaging
 
-### 🧑‍💼 Counsellor Experience
-
+### Counsellor Experience
 - Counsellor registration and authentication
 - Role-based counsellor dashboard
 - Professional profile management
@@ -67,40 +59,29 @@ The application includes protected access for:
 
 Users can only perform actions permitted by their role and relationship to the data.
 
----
-
 ## 💬 Secure Messaging
-
 CounselConnect includes a private messaging system that allows clients and counsellors to communicate through their appointment relationship.
 
 Messages are associated with conversations between:
-
 **Client ↔ Counsellor**
-
 and access is protected through database-level security policies.
 
-
-
 ## 🛠️ Tech Stack
-
 ### Frontend
-
-- ⚛️ React
-- ⚡ Vite
-- 🧭 React Router
-- 🎨 CSS
+- React
+- Vite
+- React Router
+- CSS
 
 ### Backend & Database
-
-- 🟩 Supabase
+- Supabase
 - PostgreSQL
 - Supabase Authentication
 - Row Level Security (RLS)
 
 ### Deployment
-
-- ▲ Vercel
-- 🐙 GitHub
+- Vercel
+- GitHub
 
 ## Future Improvements
 - Password recovery / Forgot - Password
@@ -118,7 +99,6 @@ and access is protected through database-level security policies.
 - Additional accessibility improvements
 
 ## 🏗️ Application Architecture
-
 CounselConnect
 │
 ├── Public Experience
