@@ -107,15 +107,15 @@ and access is protected through database-level security policies.
 - Email verification
 - Appointment reminders
 - Rescheduling
-Enhanced real-time messaging
-Profile photographs
-Advanced counsellor search and filtering
-Improved notifications
-Payment integration
-Admin dashboard
-Help Centre
-Contact/support functionality
-Additional accessibility improvements
+- Enhanced real-time messaging
+- Profile photographs
+- Advanced counsellor search and filtering
+- Improved notifications
+- Payment integration
+- Admin dashboard
+- Help Centre
+- Contact/support functionality
+- Additional accessibility improvements
 
 ## 🏗️ Application Architecture
 
