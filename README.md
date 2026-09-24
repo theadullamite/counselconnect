@@ -1,16 +1,153 @@
-# React + Vite
+# CounselConnect
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+### Connecting people with professional counsellors for meaningful support and personal growth.
 
-Currently, two official plugins are available:
+CounselConnect is a web platform designed to make it easier for clients to discover counsellors, book counselling sessions, manage appointments, and communicate securely with their counsellors.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+ **Live Demo:** https://counselconnect-bice.vercel.app/
 
-## React Compiler
+---
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## What is CounselConnect?
 
-## Expanding the ESLint configuration
+Finding the right counsellor and managing counselling sessions shouldn't have to be complicated.
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+**CounselConnect** provides a simple digital experience where clients can:
+
+- 🔎 Discover counsellors
+- 👤 View counsellor profiles
+- 📅 Check availability
+- 🕐 Book available counselling sessions
+- 📋 Manage appointments
+- 💬 Communicate with counsellors
+- 👤 Manage their profile
+
+Counsellors can also manage their professional profiles, availability, appointments, and client communication from their dashboard.
+
+---
+
+## 🚀 Features
+
+### 👥 Client Experience
+
+- Client registration and authentication
+- Role-based client dashboard
+- Counsellor directory
+- Counsellor profiles
+- Real-time availability-based booking
+- 60-minute appointment slots
+- Appointment history
+- Appointment cancellation
+- Client profile management
+- Secure counsellor messaging
+
+### 🧑‍💼 Counsellor Experience
+
+- Counsellor registration and authentication
+- Role-based counsellor dashboard
+- Professional profile management
+- Specialty and experience information
+- Availability management
+- Appointment management
+- Confirm, cancel, and complete sessions
+- Session history
+- Secure client messaging
+
+### 🔐 Security
+
+CounselConnect uses **Supabase Row Level Security (RLS)** to control access to sensitive application data.
+
+The application includes protected access for:
+
+- User profiles
+- Appointments
+- Availability
+- Conversations
+- Messages
+
+Users can only perform actions permitted by their role and relationship to the data.
+
+---
+
+## 💬 Secure Messaging
+
+CounselConnect includes a private messaging system that allows clients and counsellors to communicate through their appointment relationship.
+
+Messages are associated with conversations between:
+
+**Client ↔ Counsellor**
+
+and access is protected through database-level security policies.
+
+
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+- ⚛️ React
+- ⚡ Vite
+- 🧭 React Router
+- 🎨 CSS
+
+### Backend & Database
+
+- 🟩 Supabase
+- PostgreSQL
+- Supabase Authentication
+- Row Level Security (RLS)
+
+### Deployment
+
+- ▲ Vercel
+- 🐙 GitHub
+
+## Future Improvements
+- Password recovery / Forgot - Password
+- Email verification
+- Appointment reminders
+- Rescheduling
+Enhanced real-time messaging
+Profile photographs
+Advanced counsellor search and filtering
+Improved notifications
+Payment integration
+Admin dashboard
+Help Centre
+Contact/support functionality
+Additional accessibility improvements
+
+## 🏗️ Application Architecture
+
+CounselConnect
+│
+├── Public Experience
+│   ├── Home
+│   ├── About
+│   ├── Counsellor Directory
+│   └── Counsellor Profiles
+│
+├── Authentication
+│   ├── Register
+│   └── Login
+│
+├── Client Experience
+│   ├── Client Dashboard
+│   ├── Client Profile
+│   ├── Appointments
+│   └── Chat
+│
+├── Counsellor Experience
+│   ├── Counsellor Dashboard
+│   ├── Professional Profile
+│   ├── Availability
+│   ├── Sessions
+│   └── Chat
+│
+└── Supabase
+    ├── Authentication
+    ├── Profiles
+    ├── Appointments
+    ├── Availability
+    ├── Conversations
+    └── Messages
