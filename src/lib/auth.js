@@ -21,6 +21,12 @@ export async function signIn(email, password) {
   });
 }
 
+export async function resetPassword(email) {
+  return await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${window.location.origin}/reset-password`,
+  });
+}
+
 export async function signOut() {
   return await supabase.auth.signOut();
 }
