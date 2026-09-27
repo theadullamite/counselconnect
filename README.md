@@ -71,13 +71,18 @@ and access is protected through database-level security policies.
 - React
 - Vite
 - React Router
+- Protected Routes
 - CSS
+- Role-based UI
 
 ### Backend & Database
 - Supabase
 - PostgreSQL
 - Supabase Authentication
 - Row Level Security (RLS)
+
+### Realtime
+- Supabase Realtime for messaging & availability
 
 ### Deployment
 - Vercel

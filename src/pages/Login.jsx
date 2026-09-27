@@ -9,9 +9,8 @@ function Login() {
   const { profile } = useAuth();
 
   useEffect(() => {
-
     if (!profile) return;
-    
+
     if (profile.role === "client") {
       navigate("/client-dashboard");
     }
@@ -20,7 +19,6 @@ function Login() {
       navigate("/counsellor-dashboard");
     }
   }, [profile, navigate]);
-
 
   const [formData, setFormData] = useState({
     email: "",
@@ -102,6 +100,10 @@ function Login() {
             {loading ? "Logging in..." : "Log in"}
           </button>
         </form>
+
+        <p className="auth-footer">
+          <Link to="/forgot-password">Forgot your password?</Link>
+        </p>
 
         <p className="auth-footer">
           Don't have an account? <Link to="/register">Create one</Link>
