@@ -22,8 +22,12 @@ export async function signIn(email, password) {
 }
 
 export async function resetPassword(email) {
+  const redirectUrl = import.meta.env.DEV 
+  ? "http://localhost:5173/reset-password"
+  : "https://counselconnect-bice.vercel.app/reset-password";
+
   return await supabase.auth.resetPasswordForEmail(email, {
-    redirectTo: `${window.location.origin}/reset-password`,
+    redirectTo: redirectUrl,
   });
 }
 
