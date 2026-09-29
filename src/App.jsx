@@ -17,6 +17,7 @@ import RoleRoute from "./components/RoleRoute";
 import CounsellorProfileManagement from "./pages/CounsellorProfileManagement";
 import Chat from "./pages/Chat";
 import ForgotPassword from "./pages/ForgotPassword";
+import ResetPassword from "./pages/ResetPassword";
 
 
 
@@ -36,6 +37,7 @@ function App() {
         <Route path="/register" element={<Register />} />
         <Route path="/login" element={<Login />} />
         <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         <Route path="/client-dashboard" element={<RoleRoute allowedRole="client"><ClientDashboard /></RoleRoute>} />
         <Route path="/client-profile" element={<RoleRoute allowedRole="client"><ClientProfile /></RoleRoute>} />
         <Route path="/counsellor-dashboard" element={<RoleRoute allowedRole="counsellor"><CounsellorDashboard /></RoleRoute>} />
