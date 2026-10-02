@@ -48,6 +48,9 @@ function ResetPassword() {
       password,
     });
 
+    console.log("Password update data:", data);
+    console.log("Password update error:", error);
+
     if (error) {
       setError(error.message);
       setLoading(false);
