@@ -44,7 +44,7 @@ function ResetPassword() {
 
     setLoading(true);
 
-    const { error } = await supabase.auth.updateUser({
+    const { data, error } = await supabase.auth.updateUser({
       password,
     });
 
