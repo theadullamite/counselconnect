@@ -1,24 +1,10 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "../lib/supabase";
 import "./Auth.css";
 
 function ResetPassword() {
   const navigate = useNavigate();
-
-  useEffect(() => {
-    async function checkSession() {
-      const {
-        data: { session },
-        error,
-      } = await supabase.auth.getSession();
-
-      console.log("Reset password session:", session);
-      console.log("Reset password session error:", error);
-    }
-
-    checkSession();
-  }, []);
 
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
@@ -44,12 +30,11 @@ function ResetPassword() {
 
     setLoading(true);
 
-    const { data, error } = await supabase.auth.updateUser({
+    const { error } = await supabase.auth.updateUser({
       password,
     });
 
-    console.log("Password update data:", data);
-    console.log("Password update error:", error);
+  
 
     if (error) {
       setError(error.message);
@@ -99,28 +84,20 @@ function ResetPassword() {
           </div>
 
           <div className="form-group">
-            <label htmlFor="confirmPassword">
-              Confirm new password
-            </label>
+            <label htmlFor="confirmPassword">Confirm new password</label>
 
             <input
               id="confirmPassword"
               name="confirmPassword"
               type="password"
               value={confirmPassword}
-              onChange={(event) =>
-                setConfirmPassword(event.target.value)
-              }
+              onChange={(event) => setConfirmPassword(event.target.value)}
               placeholder="Confirm your new password"
               required
             />
           </div>
 
-          <button
-            type="submit"
-            className="auth-submit"
-            disabled={loading}
-          >
+          <button type="submit" className="auth-submit" disabled={loading}>
             {loading ? "Updating..." : "Update password"}
           </button>
         </form>
